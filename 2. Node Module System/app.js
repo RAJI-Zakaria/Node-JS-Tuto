@@ -11,3 +11,15 @@ const {log, sayHello} = require('./logger.js');
 log('this is a new message');
 
 sayHello('zakaria');
+
+
+
+const Logger = require('./Extending-EventEmitter');
+const logger = new Logger();
+//registering new listener
+logger.on('messageLogged', (arg)=>{
+    console.log('listener called ', arg);
+})
+
+
+logger.log('message');
