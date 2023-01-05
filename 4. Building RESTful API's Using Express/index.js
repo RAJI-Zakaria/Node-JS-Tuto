@@ -1,6 +1,7 @@
 const express = require('express');//returns a function
 const app = express();
 
+const PORT = process.env.port || 3000
 //HTTP verbs/methods
 // app.get();
 // app.post();
@@ -17,12 +18,21 @@ app.get('/api/courses/', (req,res)=>{
 })
 
 
+//Route Parameters | Queries ?sort=something
+app.get('/api/user/:name/:id', (req,res)=>{
+    //reading params
+    //res.send(req.params);
+
+    //reading queries
+    res.send(req.query);
+})
 
 
 
 
-app.listen(3000, ()=>{
-    console.log('listening on port 3000....');
+
+app.listen(PORT, ()=>{
+    console.log(`listening on port ${PORT}....`);
 });
 
 
