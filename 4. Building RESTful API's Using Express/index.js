@@ -1,6 +1,8 @@
 const express = require('express');//returns a function
 const app = express();
 
+app.use(express.json())
+
 const PORT = process.env.port || 3000
 //HTTP verbs/methods
 // app.get();
@@ -20,7 +22,7 @@ app.get('/:name', (req,res)=>{
 })
 
 app.get('/api/courses/', (req,res)=>{
-    res.send([1,2,3])
+    res.send(courses)
 })
 
 
@@ -30,6 +32,18 @@ app.get('/api/courses/:id', (req,res)=>{
         res.status(404).send('the course with the giving id was not found')
 
     res.send(course)
+})
+
+
+app.post('/api/courses', (req,res)=>{
+    //in order for the "body" to work we must use expressJson middleware
+    const course = {
+        id:courses.length+1,
+        name:req.body.name
+    }
+    courses.push(course);
+    //return the new course with id to the client
+    res.send(course);
 })
 
 
