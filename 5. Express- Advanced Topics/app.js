@@ -4,11 +4,15 @@
 
 const express = require('express');
 const app = express();
+const helmet = require('helmet');
+const morgan = require('morgan');
 
 const Joi = require('joi');
 
 const logger = require('./logger.js');
 const PORT = process.env.port || 3000
+
+
 
 
 //express.json() : returns a middleware function.....
@@ -20,6 +24,17 @@ app.use(express.urlencoded({extended:true})); //in POSTMAN We can use x-www-form
 //static assets middleware : css, images....
 app.use(express.static(__dirname + '/public')); // onn navigator/postman : http://localhost:3000/readme.txt
 
+/*
+    - Please note that using other third party middleware can have a bad impact on the performance of your application.
+    - as a result do not add any middleware unless if you're indeed in need of using it.
+ */
+
+//Helmmet enhances the security of your application against many vulnerabilities such XSS...
+app.use(helmet());
+
+//morgan is used to log HTTP requests and errors, and simplifies the process , you can log information based on a specific format such :
+//verb endpoint code_resp - time_execution ===> 'tiny'
+app.use(morgan('tiny'));
 
 //we are talking about request processsing pipeline : contains differents middleware such json() & route()....
 //this concept is meant to be used for loggin, authorization....
