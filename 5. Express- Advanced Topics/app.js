@@ -12,7 +12,9 @@ const Joi = require('joi');
 const logger = require('./logger.js');
 const PORT = process.env.port || 3000
 
-
+console.log(`NODE_ENV : ${process.env.NODE_ENV}`);//returns undefined : means must set it manually.
+console.log(`ENV : ${app.get('env')}`); //by default : development
+//to change the NODE_ENV to production you can run on terminal : exports NODE_ENV=production
 
 
 //express.json() : returns a middleware function.....
@@ -34,7 +36,10 @@ app.use(helmet());
 
 //morgan is used to log HTTP requests and errors, and simplifies the process , you can log information based on a specific format such :
 //verb endpoint code_resp - time_execution ===> 'tiny'
-app.use(morgan('tiny'));
+if(app.get('env') === 'development'){//Enhancing performance on production
+    app.use(morgan('tiny'));
+    console.log("morgan is enabled");
+}
 
 //we are talking about request processsing pipeline : contains differents middleware such json() & route()....
 //this concept is meant to be used for loggin, authorization....
