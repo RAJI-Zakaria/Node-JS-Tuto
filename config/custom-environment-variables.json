@@ -1,0 +1,5 @@
+{//mapping of ENV Variables
+  "mail": {
+    "password": "appName_password"
+  }
+}

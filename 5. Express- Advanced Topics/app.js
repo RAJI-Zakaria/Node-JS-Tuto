@@ -2,10 +2,14 @@
 //its used to handle
 
 
+const config = require('config');
+
 const express = require('express');
 const app = express();
 const helmet = require('helmet');
 const morgan = require('morgan');
+
+
 
 const Joi = require('joi');
 
@@ -33,6 +37,12 @@ app.use(express.static(__dirname + '/public')); // onn navigator/postman : http:
 
 //Helmmet enhances the security of your application against many vulnerabilities such XSS...
 app.use(helmet());
+
+//configuration :
+console.log(`Application NAME : ${config.get('name')}`)
+console.log(`Application SERVER : ${config.get('mail.host')}`)
+//TODO : Bug config.get('mail.password') returns error
+//console.log(`Application PASSWORD : ${config.get('mail.password')}`)
 
 //morgan is used to log HTTP requests and errors, and simplifies the process , you can log information based on a specific format such :
 //verb endpoint code_resp - time_execution ===> 'tiny'
