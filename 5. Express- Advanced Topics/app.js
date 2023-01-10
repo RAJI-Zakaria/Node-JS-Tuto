@@ -17,6 +17,11 @@ const morgan = require('morgan');
 
 const Joi = require('joi');
 
+
+//setting the templating engine :
+app.set('view engine', 'pug'); //this will load pug without "require".
+app.set('views', './views')//default folder ==> root
+
 const logger = require('./logger.js');
 const PORT = process.env.port || 3000
 
@@ -64,6 +69,15 @@ dbDebugger("connecting to the DB....");
 
 //Creating a middleware fucntion :
 app.use(logger)
+
+
+
+app.get('/', (req,res)=>{
+    res.render('index', {title:"Zak's Howdy", message:"Hello"});
+})
+
+
+
 
 const courses = [
     {id:1,name:"course1"},
