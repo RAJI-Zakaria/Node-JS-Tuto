@@ -11,17 +11,17 @@ const {
 } = require('../controllers/userController')
 
 // -------------------------CUSTOM ROUTE-------------------------
-router.post('/sign-up', signUp)
+router.post('/', signUp)
 
-router.put('/sign-up/:id', updateSignUp)
+router.put('/:id', updateSignUp)
 
-router.get('/sign-up/', getAllUsers)
+router.get('/', getAllUsers)
 
-router.get('/sign-up/:id', getSingleUser)
+router.get('/:id', getSingleUser)
 
-router.delete('/sign-up/:id', deleteSingleUser)
+router.delete('/:id', deleteSingleUser)
 
-router.delete('/sign-up/', deleteAllUsers)
+router.delete('/', deleteAllUsers)
 
 
 

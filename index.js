@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 
 // router import
 const user = require('./routes/userRoute')
+const home = require('./routes/home')
 
 const startupDebugger = require('debug')('app:startup');
 
@@ -21,14 +22,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+//setting the templating engine :
+app.set('view engine', 'pug'); //this will load pug without "require".
+app.set('views', './views')//default folder ==> root
+
+
 // Routing
-app.use('/api', user)
+app.use('/api/users', user)
 
-
-// simple route
-app.get("/", (req, res) => {
-    res.json({ message: "Welcome to  application." });
-});
+app.get("/", home);
 
 
 
