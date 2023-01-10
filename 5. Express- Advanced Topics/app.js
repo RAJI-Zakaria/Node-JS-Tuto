@@ -13,6 +13,9 @@ const app = express();
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+const courses = require('../routes/courses');
+const home = require('../routes/home');
+
 
 
 const Joi = require('joi');
@@ -22,7 +25,7 @@ const Joi = require('joi');
 app.set('view engine', 'pug'); //this will load pug without "require".
 app.set('views', './views')//default folder ==> root
 
-const logger = require('./logger.js');
+const logger = require('../middleware/logger');
 const PORT = process.env.port || 3000
 
 // console.log(`NODE_ENV : ${process.env.NODE_ENV}`);//returns undefined : means must set it manually.
@@ -46,6 +49,8 @@ app.use(express.static(__dirname + '/public')); // onn navigator/postman : http:
 
 //Helmmet enhances the security of your application against many vulnerabilities such XSS...
 app.use(helmet());
+app.use('/api/courses', courses);
+app.use('/', home);
 
 //configuration :
 console.log(`Application NAME : ${config.get('name')}`)
@@ -72,104 +77,10 @@ app.use(logger)
 
 
 
-app.get('/', (req,res)=>{
-    res.render('index', {title:"Zak's Howdy", message:"Hello"});
-})
 
 
 
 
-const courses = [
-    {id:1,name:"course1"},
-    {id:2,name:"course2"},
-    {id:3,name:"course3"}
-];
-
-
-
-app.get('/api/courses', (req,res)=>{
-    res.send(courses);
-})
-
-
-
-app.get('/api/courses/:id', (req,res)=>{
-    const course = courses.find((c) => c.id===parseInt(req.params.id))
-    if(!course)//return 404
-        res.status(404).send('the course with the giving id was not found')
-
-    res.send(course)
-})
-
-
-app.post('/api/courses', (req,res)=>{
-    //validating
-    const {error} = validateCourse(req.body);
-    //checking the value of our property "name" :
-    if(error){//not null == error occurs
-        //it's better to send a specific error data instead of sending the whole object Ex : rs.error ==> rs.error.details[0].message
-        //note : we can concatenate selected error data.
-        res.status(400).send(error.details[0].message);
-        //die or exit
-        return;
-    }
-    //in order for the "body" to work we must use expressJson middleware
-    const course = {
-        id:courses.length+1,
-        name:req.body.name
-    }
-    courses.push(course);
-    //return the new course with id to the client
-    res.send(course);
-})
-
-app.put('/api/courses/:id', (req,res)=>{
-    //Look up the course by id
-    //if not existing, return 404
-    const course = courses.find((c) => c.id===parseInt(req.params.id))
-    if(!course)//return 404
-    {
-        res.status(404).send('the course with the giving id was not found')
-        return;
-    }
-
-    //validate
-    //If invalid, return 400 - Bad request
-    //using object destructuring { ... }
-    const {error} = validateCourse(req.body);
-    if(error){
-        res.status(400).send(error.details[0].message);
-        return;
-    }
-    //update course
-    //return the updated course
-    course.name=req.body.name;
-    res.send(course);
-})
-
-app.delete('/api/courses/:id', (req,res)=>{
-
-    const course = courses.find((c) => c.id===parseInt(req.params.id))
-
-    if(!course) return res.status(404).send('the course with the giving id was not found')
-
-
-    //Delete
-    const index = courses.indexOf(course);
-    courses.splice(index,1);
-
-    res.send(course);
-
-
-});
-
-function validateCourse(course){
-    const schema = Joi.object({
-        name:Joi.string().min(3).required()
-    })
-
-    return schema.validate(course);
-}
 
 
 
