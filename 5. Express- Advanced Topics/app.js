@@ -1,6 +1,10 @@
 //A middleware function is a function that takes a request object and either terminates the request/response cycle or passes control to another middleware function.
 //its used to handle
 
+//loading debug
+//arbitrary name space : app:startup
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
 
 const config = require('config');
 
@@ -16,8 +20,8 @@ const Joi = require('joi');
 const logger = require('./logger.js');
 const PORT = process.env.port || 3000
 
-console.log(`NODE_ENV : ${process.env.NODE_ENV}`);//returns undefined : means must set it manually.
-console.log(`ENV : ${app.get('env')}`); //by default : development
+// console.log(`NODE_ENV : ${process.env.NODE_ENV}`);//returns undefined : means must set it manually.
+// console.log(`ENV : ${app.get('env')}`); //by default : development
 //to change the NODE_ENV to production you can run on terminal : exports NODE_ENV=production
 
 
@@ -48,8 +52,12 @@ console.log(`Application SERVER : ${config.get('mail.host')}`)
 //verb endpoint code_resp - time_execution ===> 'tiny'
 if(app.get('env') === 'development'){//Enhancing performance on production
     app.use(morgan('tiny'));
-    console.log("morgan is enabled");
+    // console.log("morgan is enabled");
+    startupDebugger('morgan is enabled');
 }
+
+//Example connecting to the DB ==> debugger log
+dbDebugger("connecting to the DB....");
 
 //we are talking about request processsing pipeline : contains differents middleware such json() & route()....
 //this concept is meant to be used for loggin, authorization....
