@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 
 // router import
 const user = require('./routes/userRoute')
+const post = require('./routes/postRoute')
 const home = require('./routes/home')
 
 const startupDebugger = require('debug')('app:startup');
@@ -29,6 +30,8 @@ app.set('views', './views')//default folder ==> root
 
 // Routing
 app.use('/api/users', user)
+// Routing
+app.use('/api/posts', post)
 
 app.get("/", home);
 

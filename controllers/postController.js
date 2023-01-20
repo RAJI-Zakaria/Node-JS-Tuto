@@ -1,44 +1,44 @@
-const {Post} = require("../models");
+const Post = require('../models').Post
 const User = require('../models').User
 
 
 module.exports = {
 
-    // create account
-    signUp: (req, res) => {
+    // create post
+    createPost: (req, res) => {
         let { firstName, age} = req.body
 
-        User.create({
+        Post.create({
             firstName,
             age
-        }).then((user) => {
+        }).then((Post) => {
             return res.status(201).json({
-                "message": "User created successfully",
-                user
+                "message": "Post created successfully",
+                post
             })
         }).catch(err => {
             return res.status(400).json({err}.err.errors[0].message);
         })
     },
 
-    updateSignUp: (req, res) => {
+    updatePost: (req, res) => {
         let { firstName, age} = req.body
         let id = req.params.id
 
-        User.findOne({
+        Post.findOne({
             where: {id:id}
-        }).then( user => {
-            if (user){
-                user.update({firstName, age})
-                    .then((updateUser) => {
+        }).then( post => {
+            if (post){
+                post.update({firstName, age})
+                    .then((updatePost) => {
                         return res.status(202).json({
-                            "message": "User updated successfully",
-                            updateUser
+                            "message": "Post updated successfully",
+                            updatePost
                         })
                     })
             }else{
                 return res.status(206).json({
-                    "message": "User not found"
+                    "message": "Post not found"
                 })
             }
         }).catch(error => {
@@ -47,44 +47,44 @@ module.exports = {
     },
 
 
-    // get all users
-    getAllUsers: ( req, res ) => {
-        User.findAll( {
-            attributes: ['id', 'firstName', 'age'],
-            limit: 5,
-            order: [['id', 'DESC']]
-        }).then(users => {
+    // get all Posts
+    getAllPosts: ( req, res ) => {
+        Post.findAll( {
+            // attributes: ['id', 'firstName', 'age'],
+            // limit: 5,
+            // order: [['id', 'DESC']]
+        }).then(posts => {
             return res.status(200).json({
-                users
+                posts
             })
         }).catch(err => {
             return res.status(400).json({err}.err.errors[0].message);
         })
     },
 
-    // get single user by id
+    // get single Post by id
 
-    getSingleUser:(req, res) => {
+    getSinglePost:(req, res) => {
         let id = req.params.id
 
-        User.findByPk(id)
-            .then((user) => {
-                return res.status(200).json({user})
+        Post.findByPk(id)
+            .then((post) => {
+                return res.status(200).json({post})
             }).catch(err => {
             return res.status(400).json({err})
         })
     },
 
-// delete user by id
+// delete Post by id
 
-    deleteSingleUser: (req, res) => {
+    deleteSinglePost: (req, res) => {
         let id = req.params.id
 
-        User.destroy({
+        Post.destroy({
             where: {id: id}
         }).then(() =>{
             return res.status(200).json({
-                "message": "User Deleted successfully"
+                "message": "Post Deleted successfully"
             })
         }).catch(err =>{
             return res.status(400).json({error})
@@ -92,15 +92,15 @@ module.exports = {
 
     },
 
-// delete all users
+// delete all Posts
 
-    deleteAllUsers: (req, res) => {
-        User.destroy({
+    deleteAllPosts: (req, res) => {
+        Post.destroy({
             truncate: true
         }).then(() => {
             return res.status(200).json({
                 success: true,
-                "message": "All Users deleted"
+                "message": "All Posts deleted"
             })
         }).catch(err => {
             return res.status(400).json({
@@ -112,15 +112,15 @@ module.exports = {
 
 
 
-    //get user's posts :  by userID
-    getUserPosts: (req, res) => {
+    //get post's user :  by postID
+    getPostUser: (req, res) => {
         let id = req.params.id
 
-        User.findByPk(id,{
+        Post.findByPk(id, {
             include: [
                 {
-                    model: Post,
-                    as : 'posts'
+                 model: User,
+                 as : 'User'
                 }
             ]
         })
@@ -139,6 +139,16 @@ module.exports = {
 
 
 
+}
 
 
+
+function getUser(id){
+    User.findByPk(id)
+        .then((post) => {
+            let user = post.getAllUsers();
+            return res.status(200).json({user})
+        }).catch(err => {
+        return res.status(400).json({err})
+    })
 }

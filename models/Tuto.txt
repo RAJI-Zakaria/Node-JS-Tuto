@@ -1,0 +1,5 @@
+To create a model using terminal  :
+sequelize model:create --name task --attributes 'title:string isCompleted:boolean'
+
+to migrate use  :
+sequelize db:migrate
