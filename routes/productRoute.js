@@ -8,7 +8,8 @@ const {
     deleteSingleProduct,
         deleteAllProducts,
     getProductUsers,
-    getProductOrders
+    getProductOrders,
+    getProductWithPg
 
 } = require('../controllers/productController')
 
@@ -31,6 +32,9 @@ router.get('/:id/users', getProductUsers)
 
 router.get('/:id/orders', getProductOrders)
 
+
+//pagination :  display products 5 by 5
+router.get('/page/:number', getProductWithPg)
 
 // -------------------------EXPORT ROUTER-------------------------
 module.exports = router

@@ -162,6 +162,25 @@ module.exports = {
     },
 
 
+    //get Product's product :  by ProductID
+    getProductWithPg: (req, res) => {
+        let pageNumber = req.params.number
+        let pageSize = 5;//display only 5 records
+        Product.findAll({
+            limit: pageSize,
+            offset: (pageNumber-1)*pageSize,
+        })
+            .then((product) => {
+
+                return res.status(200).json({product})
+
+
+            }).catch(err => {
+            return res.status(400).json({err})
+        })
+    },
+
+
 
 
 
