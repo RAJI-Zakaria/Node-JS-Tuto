@@ -4,20 +4,23 @@
     "password": "root",
     "database": "db_express_dev",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": "3306"
   },
   "test": {
     "username": "root",
     "password": "root",
     "database": "db_express_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": "3306"
   },
   "production": {
     "username": "root",
     "password": "root",
     "database": "db_express_pro",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": "3306"
   }
 }

@@ -6,12 +6,16 @@ module.exports = {
 
     // create post
     createPost: (req, res) => {
-        let { firstName, age} = req.body
-
+        let { title, description, UserId} = req.body
+        //TODO : we can use include to create the user withing the post ==> create the post and the user
+        //Problem : if the user exists it will trigger error : id must be primary = unique
         Post.create({
-            firstName,
-            age
-        }).then((Post) => {
+            title,
+            description,
+            UserId: UserId
+        })
+
+            .then((post) => {
             return res.status(201).json({
                 "message": "Post created successfully",
                 post
@@ -22,14 +26,14 @@ module.exports = {
     },
 
     updatePost: (req, res) => {
-        let { firstName, age} = req.body
+        let { title, description, UserId} = req.body
         let id = req.params.id
 
         Post.findOne({
             where: {id:id}
         }).then( post => {
             if (post){
-                post.update({firstName, age})
+                post.update({title, description, UserId})
                     .then((updatePost) => {
                         return res.status(202).json({
                             "message": "Post updated successfully",
@@ -50,7 +54,7 @@ module.exports = {
     // get all Posts
     getAllPosts: ( req, res ) => {
         Post.findAll( {
-            // attributes: ['id', 'firstName', 'age'],
+            // attributes: ['id', 'title', 'description'],
             // limit: 5,
             // order: [['id', 'DESC']]
         }).then(posts => {

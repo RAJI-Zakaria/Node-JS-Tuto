@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes)=>{
         });
     }
 
+
     //
     // Post.belongsTo(User, {
     //     foreignKey: 'UserId'

@@ -7,7 +7,8 @@ const {
     getSingleUser,
     deleteSingleUser,
     deleteAllUsers,
-    getUserPosts
+    getUserPosts,
+    getUserOrders
 
 } = require('../controllers/userController')
 const {getPostUser} = require("../controllers/postController");
@@ -28,6 +29,7 @@ router.delete('/', deleteAllUsers)
 
 
 router.get('/:id/posts', getUserPosts)
+router.get('/:id/products', getUserOrders)
 
 // -------------------------EXPORT ROUTER-------------------------
 module.exports = router

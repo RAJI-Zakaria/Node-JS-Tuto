@@ -1,45 +1,47 @@
-const Post = require("../models").Post;
+const Comment = require('../models').Comment
 const User = require('../models').User
-const Product = require("../models").Product;
+const Post = require('../models').Post
 
 
 module.exports = {
 
-    // create account
-    signUp: (req, res) => {
-        let { firstName, age} = req.body
+    // create post
+    createComment: (req, res) => {
+        let { title, rating, UserId, PostId} = req.body
 
-        User.create({
-            firstName,
-            age
-        }).then((user) => {
+        Comment.create({
+            title,
+            rating,
+            UserId:UserId,
+            PostId:PostId,
+        }).then((Comment) => {
             return res.status(201).json({
-                "message": "User created successfully",
-                user
+                "message": "Comment created successfully",
+                post
             })
         }).catch(err => {
             return res.status(400).json({err}.err.errors[0].message);
         })
     },
 
-    updateSignUp: (req, res) => {
+    updateComment: (req, res) => {
         let { firstName, age} = req.body
         let id = req.params.id
 
-        User.findOne({
+        Comment.findOne({
             where: {id:id}
-        }).then( user => {
-            if (user){
-                user.update({firstName, age})
-                    .then((updateUser) => {
+        }).then( post => {
+            if (post){
+                post.update({firstName, age})
+                    .then((updateComment) => {
                         return res.status(202).json({
-                            "message": "User updated successfully",
-                            updateUser
+                            "message": "Comment updated successfully",
+                            updateComment
                         })
                     })
             }else{
                 return res.status(206).json({
-                    "message": "User not found"
+                    "message": "Comment not found"
                 })
             }
         }).catch(error => {
@@ -48,44 +50,44 @@ module.exports = {
     },
 
 
-    // get all users
-    getAllUsers: ( req, res ) => {
-        User.findAll( {
-            attributes: ['id', 'firstName', 'age'],
-            limit: 5,
-            order: [['id', 'DESC']]
-        }).then(users => {
+    // get all Comments
+    getAllComments: ( req, res ) => {
+        Comment.findAll( {
+            // attributes: ['id', 'firstName', 'age'],
+            // limit: 5,
+            // order: [['id', 'DESC']]
+        }).then(comments => {
             return res.status(200).json({
-                users
+                comments
             })
         }).catch(err => {
             return res.status(400).json({err}.err.errors[0].message);
         })
     },
 
-    // get single user by id
+    // get single Comment by id
 
-    getSingleUser:(req, res) => {
+    getSingleComment:(req, res) => {
         let id = req.params.id
 
-        User.findByPk(id)
-            .then((user) => {
-                return res.status(200).json({user})
+        Comment.findByPk(id)
+            .then((post) => {
+                return res.status(200).json({post})
             }).catch(err => {
             return res.status(400).json({err})
         })
     },
 
-// delete user by id
+// delete Comment by id
 
-    deleteSingleUser: (req, res) => {
+    deleteSingleComment: (req, res) => {
         let id = req.params.id
 
-        User.destroy({
+        Comment.destroy({
             where: {id: id}
         }).then(() =>{
             return res.status(200).json({
-                "message": "User Deleted successfully"
+                "message": "Comment Deleted successfully"
             })
         }).catch(err =>{
             return res.status(400).json({error})
@@ -93,15 +95,15 @@ module.exports = {
 
     },
 
-// delete all users
+// delete all Comments
 
-    deleteAllUsers: (req, res) => {
-        User.destroy({
+    deleteAllComments: (req, res) => {
+        Comment.destroy({
             truncate: true
         }).then(() => {
             return res.status(200).json({
                 success: true,
-                "message": "All Users deleted"
+                "message": "All Comments deleted"
             })
         }).catch(err => {
             return res.status(400).json({
@@ -113,15 +115,38 @@ module.exports = {
 
 
 
-    //get user's posts :  by userID
-    getUserPosts: (req, res) => {
+    //get Comment's user :  by CommentID
+    getCommentUser: (req, res) => {
         let id = req.params.id
 
-        User.findByPk(id,{
+        Comment.findByPk(id, {
+            include: [
+                {
+                    model: User,
+                    as : 'User'
+                }
+            ]
+        })
+            .then((post) => {
+
+                return res.status(200).json({post})
+
+
+            }).catch(err => {
+            return res.status(400).json({err})
+        })
+    },
+
+
+    //get Comment's post :  by CommentID
+    getCommentPost: (req, res) => {
+        let id = req.params.id
+
+        Comment.findByPk(id, {
             include: [
                 {
                     model: Post,
-                    as : 'posts'
+                    as : 'Post'
                 }
             ]
         })
@@ -138,33 +163,9 @@ module.exports = {
 
 
 
-    //get user's Orders :  by userID
-    getUserOrders: (req, res) => {
-        let id = req.params.id
-
-        User.findByPk(id,{
-            include: [
-                {
-                    model: Product,
-                    as : 'Product'
-                }
-            ]
-        })
-            .then((user) => {
-
-                return res.status(200).json({user})
-
-
-            }).catch(err => {
-            return res.status(400).json({err})
-        })
-    },
-
-
-
-
-
-
 
 
 }
+
+
+ 
