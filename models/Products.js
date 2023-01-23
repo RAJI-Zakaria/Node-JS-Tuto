@@ -16,10 +16,15 @@ module.exports = (sequelize, DataTypes)=>{
 
     Product.associate = function (models) {
         // associations can be defined here
-        Product.belongsToMany(models.User, {
-            as: 'User',
-            foreignKey: 'UserId',//by default
-            through: 'Orders'
+        // Product.belongsToMany(models.User, {
+        //     as: 'User',
+        //     foreignKey: 'UserId',//by default
+        //     through: 'Orders'
+        // });
+
+
+        Product.hasMany(models.Order, {
+            as : 'Order'
         });
     }
     return Product;

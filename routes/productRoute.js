@@ -7,7 +7,7 @@ const {
         getSingleProduct,
     deleteSingleProduct,
         deleteAllProducts,
-    getProductUser,
+    getProductUsers,
     getProductOrders
 
 } = require('../controllers/productController')
@@ -27,9 +27,9 @@ router.delete('/', deleteAllProducts)
 
 
 
-router.get('/:id/user', getProductUser)
+router.get('/:id/users', getProductUsers)
 
-router.get('/:id/post', getProductOrders)
+router.get('/:id/orders', getProductOrders)
 
 
 // -------------------------EXPORT ROUTER-------------------------

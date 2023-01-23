@@ -1,3 +1,4 @@
+const Order = require("../models").Order;
 const User = require('../models').User
 const Product = require('../models').Product
 
@@ -110,15 +111,20 @@ module.exports = {
 
 
 
-    //get Product's user :  by ProductID
-    getProductUser: (req, res) => {
+    //get Product's users :  by ProductID through Orders
+    getProductUsers: (req, res) => {
         let id = req.params.id
-        console.log('Hallo');
         Product.findByPk(id, {
-            include: [
+            include:  [
                 {
-                    model: User,
-                    as : 'User'
+                    model: Order,
+                    as : 'Order',
+                    include : [
+                        {
+                            model: User,
+                            as : 'User',
+                        }
+                    ]
                 }
             ]
         })
@@ -140,8 +146,8 @@ module.exports = {
         Product.findByPk(id, {
             include: [
                 {
-                    model: Post,
-                    as : 'Post'
+                    model: Order,
+                    as : 'Order'
                 }
             ]
         })
@@ -154,6 +160,7 @@ module.exports = {
             return res.status(400).json({err})
         })
     },
+
 
 
 

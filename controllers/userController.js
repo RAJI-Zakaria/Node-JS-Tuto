@@ -1,6 +1,7 @@
 const Post = require("../models").Post;
 const User = require('../models').User
 const Product = require("../models").Product;
+const Order = require("../models").Order;
 
 
 module.exports = {
@@ -137,6 +138,33 @@ module.exports = {
 
 
 
+    /*
+    THE NEXT FUNCTION WILL RETURN :  getUserOrders
+    {
+    "user": {
+        "id": 1,
+        "firstName": "zakaria",
+        "age": 25,
+        "createdAt": "2023-01-10T14:09:48.000Z",
+        "updatedAt": "2023-01-10T14:09:48.000Z",
+        "Order": [
+            {
+                "id": 13,
+                "Quantity": 43,
+                "createdAt": "2023-01-23T10:23:56.000Z",
+                "updatedAt": "2023-01-23T10:23:56.000Z",
+                "UserId": 1,
+                "ProductId": 3,
+                "Product": {
+                    "id": 3,
+                    "title": "banane"
+                }
+            },
+             ....
+        ]
+    }
+}
+     */
 
     //get user's Orders :  by userID
     getUserOrders: (req, res) => {
@@ -145,8 +173,14 @@ module.exports = {
         User.findByPk(id,{
             include: [
                 {
-                    model: Product,
-                    as : 'Product'
+                    model: Order,
+                    as : 'Order',
+                    include : [
+                        {
+                            model: Product,
+                            as : 'Product',
+                        }
+                    ]
                 }
             ]
         })

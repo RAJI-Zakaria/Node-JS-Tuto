@@ -24,15 +24,18 @@ module.exports = (sequelize, DataTypes)=>{
         // associations can be defined here
         User.hasMany(models.Post, {
             as : 'posts',
-            foreignKey: 'UserId'
         });
 
 
-        User.belongsToMany(models.Product, {
-            as: 'Product',
-            foreignKey: 'ProductId',
-            through: 'Orders'
+        User.hasMany(models.Order, {
+            as : 'Order',
         });
+
+        // User.belongsToMany(models.Product, {
+        //     as: 'Product',
+        //     foreignKey: 'ProductId',
+        //     through: 'Orders'
+        // });
 
     }
 
