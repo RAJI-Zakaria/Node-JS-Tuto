@@ -3,6 +3,13 @@ const app = express();
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+
+const authenticate = require('./middleware/authenticate');
+
+
+const errorHandler = require('./middleware/error-handler');
+const verifyJWT = require('./middleware/verifyJWT');
 
 // router import
 const user = require('./routes/userRoute')
@@ -10,6 +17,7 @@ const post = require('./routes/postRoute')
 const comment = require('./routes/commentRoute')
 const product = require('./routes/productRoute')
 const home = require('./routes/home')
+const auth = require('./routes/authRoute')
 
 const startupDebugger = require('debug')('app:startup');
 
@@ -30,16 +38,38 @@ app.set('view engine', 'pug'); //this will load pug without "require".
 app.set('views', './views')//default folder ==> root
 
 
-// Routing
-app.use('/api/users', user)
-// Routing
-app.use('/api/posts', post)
+//middleware for cookies
+//will be used later to store/receive the Jwt tokens "cookies"
+app.use(cookieParser());
 
+
+// Routing
+app.get("/", home);
+app.use('/api/auth', auth)
+
+
+//Middleware :
+//checking for token ==> if token not valid user can't have access to the following endpoints
+app.use(verifyJWT);
+
+app.use('/api/users', user)
+app.use('/api/posts', post)
 app.use('/api/comments', comment)
 app.use('/api/products', product)
 
-app.get("/", home);
 
+
+
+//page not found  :
+app.all('*', (req, res) => {
+    return res.status(404).json({ message: 'Page not found' })
+}).post
+
+
+
+
+// global error handler
+app.use(errorHandler);
 
 
 // set port, listen for requests

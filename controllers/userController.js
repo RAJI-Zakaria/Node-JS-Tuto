@@ -2,25 +2,68 @@ const Post = require("../models").Post;
 const User = require('../models').User
 const Product = require("../models").Product;
 const Order = require("../models").Order;
+const config = require(__dirname + '/../config/config.json').development;
 
+console.log(config);
 
 module.exports = {
 
     // create account
     signUp: (req, res) => {
-        let { firstName, age} = req.body
+        let { firstName, age, email, password} = req.body
+        //TODO: check if the user exist ?
+        User.findOne({email:email})
+            .then((user) => {
+                if(user) return res.status(500).json({"msg":"User already registered"})
+            }).catch(err => {
+            return res.status(400).json({err})
+        })
+
+
 
         User.create({
             firstName,
-            age
+            age,
+            email,
+            password
         }).then((user) => {
+            if(user)
             return res.status(201).json({
                 "message": "User created successfully",
                 user
             })
         }).catch(err => {
-            return res.status(400).json({err}.err.errors[0].message);
+            return res.status(400).json({err}.err.errors);
         })
+    },
+
+    // create account
+    login: (req, res) => {
+        let { email, password} = req.body
+
+        User.findOne({
+            where: {
+                email:email
+            }
+            })
+            .then((user) => {
+                console.log({user
+                });
+                if (user) {
+                    user.role="Admin";
+                    const token = jwt.sign({ sub: user.id, role: user.role }, config.secret);
+                    const { password, ...userWithoutPassword } = user;
+                    return res.status(200).json({
+                        ...userWithoutPassword,
+                        token
+                    });
+                }
+            }).catch(err => {
+            return res.status(400).json({err})
+        })
+
+
+
     },
 
     updateSignUp: (req, res) => {
@@ -52,13 +95,11 @@ module.exports = {
     // get all users
     getAllUsers: ( req, res ) => {
         User.findAll( {
-            attributes: ['id', 'firstName', 'age'],
+            // attributes: ['id', 'firstName', 'age'],
             limit: 5,
             order: [['id', 'DESC']]
         }).then(users => {
-            return res.status(200).json({
-                users
-            })
+            return res.status(200).json({users}.users)
         }).catch(err => {
             return res.status(400).json({err}.err.errors[0].message);
         })
@@ -71,7 +112,7 @@ module.exports = {
 
         User.findByPk(id)
             .then((user) => {
-                return res.status(200).json({user})
+                return res.status(200).json({user}.user)
             }).catch(err => {
             return res.status(400).json({err})
         })

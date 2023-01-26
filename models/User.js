@@ -1,10 +1,28 @@
 module.exports = (sequelize, DataTypes)=>{
     const User = sequelize.define("User", {
         firstName:{
-                type:DataTypes.STRING,
+            type:DataTypes.STRING,
             allowNull:false,
             validate:{
                 notEmpty:true,
+            }
+        },
+        email:{
+            type:DataTypes.STRING,
+            allowNull:false,
+            validate:{
+                isEmail: true,
+            }
+        },
+        password:{
+            type:DataTypes.STRING,
+            allowNull:false,
+            validate:{
+                notEmpty:true,
+                len: {
+                    args: [4,64],
+                    msg: "Must be 5 chars at least."
+                }
             }
         },
         age:{
@@ -16,7 +34,11 @@ module.exports = (sequelize, DataTypes)=>{
                 //     msg: "Must be 20 or 23"
                 // }
             }
-        }
+        },
+        refreshToken:{
+            type:DataTypes.TEXT,
+            allowNull:true
+        },
     })
 
 

@@ -5,7 +5,10 @@
     "database": "db_express_dev",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "port": "3306"
+    "port": "3306",
+    "secret": "secret_pass",
+    "tokenLifeDuration": "24h",
+    "refreshTokenLifeDuration": "300d"
   },
   "test": {
     "username": "root",
@@ -13,7 +16,10 @@
     "database": "db_express_test",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "port": "3306"
+    "port": "3306",
+    "secret": "secret_pass",
+    "tokenLifeDuration": "24h",
+    "refreshTokenLifeDuration": "300d"
   },
   "production": {
     "username": "root",
@@ -21,6 +27,9 @@
     "database": "db_express_pro",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "port": "3306"
+    "port": "3306",
+    "secret": "secret_pass",
+    "tokenLifeDuration": "24h",
+    "refreshTokenLifeDuration": "300d"
   }
 }

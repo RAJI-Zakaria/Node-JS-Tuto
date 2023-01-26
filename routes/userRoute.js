@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const {
     signUp,
+    login,
     updateSignUp ,
     getAllUsers,
     getSingleUser,
@@ -11,25 +12,30 @@ const {
     getUserOrders
 
 } = require('../controllers/userController')
-const {getPostUser} = require("../controllers/postController");
+
+const ROLES_LIST = require('../_helpers/roles');
+
+const verifyRoles = require('../middleware/verifyRoles');
 
 // -------------------------CUSTOM ROUTE-------------------------
 router.post('/', signUp)
 
-router.put('/:id', updateSignUp)
+router.post('/login', login)
 
-router.get('/', getAllUsers)
+// router.put('/:id', updateSignUp)
 
-router.get('/:id', getSingleUser)
+router.get('/', verifyRoles(ROLES_LIST.Admin), getAllUsers)
 
-router.delete('/:id', deleteSingleUser)
+router.get('/:id', verifyRoles(ROLES_LIST.Admin), getSingleUser)
 
-router.delete('/', deleteAllUsers)
+router.delete('/:id', verifyRoles(ROLES_LIST.Admin),  deleteSingleUser)
+
+router.delete('/',verifyRoles(ROLES_LIST.Admin), deleteAllUsers)
 
 
 
-router.get('/:id/posts', getUserPosts)
-router.get('/:id/products', getUserOrders)
+router.get('/:id/posts', verifyRoles(ROLES_LIST.Admin), getUserPosts)
+router.get('/:id/products', verifyRoles(ROLES_LIST.Admin), getUserOrders)
 
 // -------------------------EXPORT ROUTER-------------------------
 module.exports = router
