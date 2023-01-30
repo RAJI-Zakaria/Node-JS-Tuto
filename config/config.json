@@ -8,7 +8,10 @@
     "port": "3306",
     "secret": "secret_pass",
     "tokenLifeDuration": "24h",
-    "refreshTokenLifeDuration": "300d"
+    "refreshTokenLifeDuration": "300d",
+    "serverIp" : "localhost",
+    "old":"192.168.1.20",
+    "serverPort": 3000
   },
   "test": {
     "username": "root",
@@ -19,7 +22,9 @@
     "port": "3306",
     "secret": "secret_pass",
     "tokenLifeDuration": "24h",
-    "refreshTokenLifeDuration": "300d"
+    "refreshTokenLifeDuration": "300d",
+    "serverIp" : "192.168.1.20",
+    "serverPort": 3000
   },
   "production": {
     "username": "root",
@@ -30,6 +35,8 @@
     "port": "3306",
     "secret": "secret_pass",
     "tokenLifeDuration": "24h",
-    "refreshTokenLifeDuration": "300d"
+    "refreshTokenLifeDuration": "300d",
+    "serverIp" : "192.168.1.20",
+    "serverPort": 3000
   }
 }

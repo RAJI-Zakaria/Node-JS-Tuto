@@ -1,17 +1,31 @@
-const express = require('express');
-const app = express();
+//singleton : will make it easy to re-use/share the same instance in different module without having to create new instances...
+//Ex : we need to use the same socket instance to be able to manage events/listener...
+const {app, server} = require("./singleton/server");
+const io = require("./singleton/socket");
+const connectionMap = require("./singleton/connectionMap");
+
+const process = require('process');
+
+const cors = require('cors');
+const corsOptions = require('./_helpers/corsOptions');
+
+const env = process.env.NODE_ENV || 'development';
+const config = require('./config/config.json')[env];
+
+
+
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const authenticate = require('./middleware/authenticate');
 
+// middleware importation
+const errorHandler = require('./middleware/error-handler')
+const verifyJWT = require('./middleware/verifyJWT')
+const verifySocketJWT = require('./middleware/verifySocketJWT')
 
-const errorHandler = require('./middleware/error-handler');
-const verifyJWT = require('./middleware/verifyJWT');
-
-// router import
+// routes importation
 const user = require('./routes/userRoute')
 const post = require('./routes/postRoute')
 const comment = require('./routes/commentRoute')
@@ -19,6 +33,7 @@ const product = require('./routes/productRoute')
 const home = require('./routes/home')
 const auth = require('./routes/authRoute')
 
+//serverIp
 const startupDebugger = require('debug')('app:startup');
 
 
@@ -27,7 +42,8 @@ const startupDebugger = require('debug')('app:startup');
 const db = require('./models');
 
 
-app.use(express.json());
+// Cross Origin Resource Sharing
+app.use(cors(corsOptions));
 app.use(morgan('tiny'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,8 +59,13 @@ app.set('views', './views')//default folder ==> root
 app.use(cookieParser());
 
 
+
+
+
+
 // Routing
 app.get("/", home);
+app.use('/api/products', product)
 app.use('/api/auth', auth)
 
 
@@ -52,10 +73,11 @@ app.use('/api/auth', auth)
 //checking for token ==> if token not valid user can't have access to the following endpoints
 app.use(verifyJWT);
 
+
+
 app.use('/api/users', user)
 app.use('/api/posts', post)
 app.use('/api/comments', comment)
-app.use('/api/products', product)
 
 
 
@@ -66,6 +88,21 @@ app.all('*', (req, res) => {
 }).post
 
 
+io.use(verifySocketJWT);
+
+//Setting up socket io to listen to events
+io.on('connection', (socket) => {
+    console.log('a user connected --> id : '+socket.id);
+    require('./listeners')(socket);
+
+    //saving the sockets for further manipulation...
+    connectionMap.add(socket.id, socket);
+    // socket.on('CH01', function (from, msg) {
+    //     console.log('MSG', from, ' saying ', msg);
+    // });
+
+});
+
 
 
 // global error handler
@@ -73,9 +110,10 @@ app.use(errorHandler);
 
 
 // set port, listen for requests
-const PORT = process.env.PORT || 3000;
+const PORT = config.serverPort;
+const SERVERIP = config.serverIp;
 db.sequelize.sync().then((req)=>{
-    app.listen(PORT,()=>{
+    server.listen(PORT, SERVERIP, ()=>{
         startupDebugger("server running");
     })
 })
